@@ -1,10 +1,14 @@
 package br.lms.bigchatbrasil.domain.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
+@Data
 @Table(name = "client_message")
 public class ClientMessage extends AbstractEntity implements Serializable {
 
@@ -23,4 +27,10 @@ public class ClientMessage extends AbstractEntity implements Serializable {
 
     @Column(name = "whatsapp", nullable = false)
     private Boolean whatsapp;
+
+    @Column(name = "sid", nullable = false)
+    private String sid;
+
+    @Column(name = "text", nullable = false)
+    private String message;
 }

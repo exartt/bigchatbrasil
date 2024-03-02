@@ -1,11 +1,12 @@
 package br.lms.bigchatbrasil.domain.service;
 
-import br.lms.bigchatbrasil.adapters.dto.CreditDTO;
-import br.lms.bigchatbrasil.adapters.dto.PostpaidDTO;
+import br.lms.bigchatbrasil.adapters.dto.TypePlanDTO;
 import br.lms.bigchatbrasil.domain.model.Client;
+
+import java.math.BigDecimal;
 
 public interface IClientService {
     Client getClientById (long clientId);
-    void insertCredit(CreditDTO creditDTO);
-    void updateLimitAmount(long clientId, PostpaidDTO postpaidDTO);
+    BigDecimal getAccountBalanceByClientId (long clientId);
+    void updateTypePlan (long clientId, TypePlanDTO typePlanDTO);
 }

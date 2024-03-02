@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS client_message (
     telephone TEXT NOT NULL,
     whatsapp BOOL NOT NULL DEFAULT false,
     text TEXT NOT NULL,
+    sid TEXT NOT NULL,
     entity_uid UUID NOT NULL DEFAULT uuid_generate_v4(),
     version INT NOT NULL DEFAULT 0
 );

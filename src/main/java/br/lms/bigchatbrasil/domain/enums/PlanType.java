@@ -14,8 +14,16 @@ public enum PlanType {
         return switch (this) {
             case PREPAID -> "pré-pago";
             case POSTPAID -> "pós-pago";
-            default -> throw new IllegalStateException("Tipo de plano desconhecido: " + this);
         };
+    }
+
+    public static PlanType fromString(String planName) {
+        for (PlanType type : PlanType.values()) {
+            if (type.planName.equalsIgnoreCase(planName)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Tipo de plano inválido: " + planName);
     }
 
     @Override
