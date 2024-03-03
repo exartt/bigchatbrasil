@@ -6,41 +6,37 @@ import br.lms.bigchatbrasil.adapters.exceptions.InvalidPlanTypeException;
 import br.lms.bigchatbrasil.adapters.exceptions.LimitValueExceededException;
 import br.lms.bigchatbrasil.domain.enums.PlanType;
 import br.lms.bigchatbrasil.domain.model.Client;
-import br.lms.bigchatbrasil.domain.model.ClientPostpaid;
 import br.lms.bigchatbrasil.domain.service.IClientPostpaidService;
 import br.lms.bigchatbrasil.domain.service.IClientService;
-import br.lms.bigchatbrasil.infrastructure.persistence.ClientPostpaidRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ClientPostpaidService implements IClientPostpaidService {
-    private final ClientPostpaidRepository clientPostpaidRepository;
     private final IClientService clientService;
     private final BigDecimal MESSAGE_FEE;
     @Autowired
-    public ClientPostpaidService(ClientPostpaidRepository clientPostpaidRepository,
-                                 IClientService clientService,
+    public ClientPostpaidService(IClientService clientService,
                                  @Value("${message.fee}") String messageFee) {
-        this.clientPostpaidRepository = clientPostpaidRepository;
         this.clientService = clientService;
         this.MESSAGE_FEE = new BigDecimal(messageFee);
     }
 
+    @Async
     @Override
     @Transactional
-    public void updateLimitAmount(long clientId, PostpaidDTO postpaidDTO) {
+    public CompletableFuture<Void> updateLimitAmount(long clientId, PostpaidDTO postpaidDTO) {
         Client client = clientService.getClientById(clientId);
-        this.validateClientForPostpaidUpdate(client, postpaidDTO);
-
-        ClientPostpaid clientPostpaid = this.updateClientPostpaidData(client, postpaidDTO);
-        client.setClientPostpaid(clientPostpaid);
+        validateClientForPostpaidUpdate(client, postpaidDTO);
+        updateClientPostpaidData(client, postpaidDTO);
+        return CompletableFuture.completedFuture(null);
     }
-
     @Override
     public void increaseSpentValue(Client client) {
         BigDecimal oldBalance = BigDecimal.valueOf(client.getClientPostpaid().getSpentValue());
@@ -54,9 +50,9 @@ public class ClientPostpaidService implements IClientPostpaidService {
         }
 
         float newAmountLimit = postpaidDTO.getLimitValue();
-        float spentAmount = client.getClientPostpaid().getLimitValue();
+        float spentAmount = client.getClientPostpaid().getSpentValue();
 
-        if (newAmountLimit > spentAmount) {
+        if (newAmountLimit < spentAmount) {
             throw new LimitValueExceededException(newAmountLimit, spentAmount);
         }
 
@@ -65,11 +61,7 @@ public class ClientPostpaidService implements IClientPostpaidService {
         }
     }
 
-    private ClientPostpaid updateClientPostpaidData(Client client, PostpaidDTO postpaidDTO) {
-        ClientPostpaid clientPostpaid = new ClientPostpaid();
-        clientPostpaid.setId(client.getId());
-        clientPostpaid.setSpentValue(client.getClientPostpaid().getSpentValue());
-        clientPostpaid.setLimitValue(postpaidDTO.getLimitValue());
-        return clientPostpaid;
+    private void updateClientPostpaidData(Client client, PostpaidDTO postpaidDTO) {
+        client.getClientPostpaid().setLimitValue(postpaidDTO.getLimitValue());
     }
 }

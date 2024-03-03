@@ -4,9 +4,10 @@ import br.lms.bigchatbrasil.adapters.dto.TypePlanDTO;
 import br.lms.bigchatbrasil.domain.model.Client;
 
 import java.math.BigDecimal;
+import java.util.concurrent.CompletableFuture;
 
 public interface IClientService {
     Client getClientById (long clientId);
     BigDecimal getAccountBalanceByClientId (long clientId);
-    void updateTypePlan (long clientId, TypePlanDTO typePlanDTO);
+    CompletableFuture<Void> updateTypePlan (long clientId, TypePlanDTO typePlanDTO);
 }

@@ -1,7 +1,7 @@
 package br.lms.bigchatbrasil.adapters.exceptions;
 
-public class BalanceException extends RuntimeException {
-    public BalanceException() {
+public class InsufficientBalanceException extends RuntimeException {
+    public InsufficientBalanceException() {
         super("Não há saldo suficiente para enviar a mensagem.");
     }
 }

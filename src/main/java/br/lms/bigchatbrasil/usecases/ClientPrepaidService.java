@@ -46,6 +46,8 @@ public class ClientPrepaidService implements IClientPrepaidService {
         }
     }
 
+    @Override
+    @Transactional
     public void deduceCredit (Client client) {
         BigDecimal amountCredit = BigDecimal.valueOf(client.getClientPrepaid().getAmountCredit());
         float deducedCredit = amountCredit.subtract(MESSAGE_FEE).setScale(2, RoundingMode.HALF_EVEN).floatValue();

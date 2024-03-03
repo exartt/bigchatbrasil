@@ -8,6 +8,7 @@ import br.lms.bigchatbrasil.domain.service.IClientPrepaidService;
 import br.lms.bigchatbrasil.domain.service.IClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +20,16 @@ public class ClientController {
     private final IClientService clientService;
     private final IClientPostpaidService clientPostpaidService;
     private final IClientPrepaidService clientPrepaidService;
+    private final SimpMessagingTemplate template;
 
-    public ClientController(IClientService clientService, IClientPostpaidService clientPostpaidService, IClientPrepaidService clientPrepaidService) {
+    public ClientController(IClientService clientService,
+                            IClientPostpaidService clientPostpaidService,
+                            IClientPrepaidService clientPrepaidService,
+                            SimpMessagingTemplate template) {
         this.clientService = clientService;
         this.clientPostpaidService = clientPostpaidService;
         this.clientPrepaidService = clientPrepaidService;
+        this.template = template;
     }
 
     @GetMapping("/get-information/{clientId}")
@@ -46,13 +52,15 @@ public class ClientController {
 
     @PatchMapping("/change-limit/{clientId}")
     public ResponseEntity<HttpStatus> setNewLimitAmount (@PathVariable long clientId, @RequestBody PostpaidDTO postpaidDTO) {
-        clientPostpaidService.updateLimitAmount(clientId, postpaidDTO);
+        clientPostpaidService.updateLimitAmount(clientId, postpaidDTO).thenAccept(unused ->
+                template.convertAndSend("/topic/status", "Operação bem sucedida, novo saldo limite definido."));
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @PatchMapping("/change-plan/{clientId}")
     public ResponseEntity<HttpStatus> changeTypePlan (@PathVariable long clientId, @RequestBody TypePlanDTO typePlanDTO) {
-        clientService.updateTypePlan(clientId, typePlanDTO);
+        clientService.updateTypePlan(clientId, typePlanDTO).thenAccept(unused ->
+                template.convertAndSend("/topic/status", "Operação bem sucedida, novo plano de selecionado: " + typePlanDTO.getPlanType().getPlanName()));
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 }

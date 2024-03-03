@@ -1,7 +1,7 @@
 package br.lms.bigchatbrasil.usecases;
 
 import br.lms.bigchatbrasil.adapters.dto.MessageDTO;
-import br.lms.bigchatbrasil.adapters.exceptions.BalanceException;
+import br.lms.bigchatbrasil.adapters.exceptions.InsufficientBalanceException;
 import br.lms.bigchatbrasil.domain.model.Client;
 import br.lms.bigchatbrasil.domain.model.ClientMessage;
 import br.lms.bigchatbrasil.domain.service.*;
@@ -48,7 +48,7 @@ public class ClientMessageService implements IClientMessageService {
     private void validateSufficientBalanceForMessage (long clientId) {
         BigDecimal balance = clientService.getAccountBalanceByClientId(clientId);
         if(!(balance.compareTo(MESSAGE_FEE) >= 0)) {
-            throw new BalanceException();
+            throw new InsufficientBalanceException();
         }
     }
 
