@@ -34,21 +34,17 @@ public class ClientService implements IClientService {
         return clientRepository.getReferenceById(clientId);
     }
 
-    @Async
     @Override
-    public CompletableFuture<ClientDTO> getClientInformation (long clientId) {
-        ClientDTO clientDTO = clientMapper.clientWithoutRelationsDTO(this.getClientReferenceById(clientId));
-        return CompletableFuture.completedFuture(clientDTO);
+    public ClientDTO getClientInformation (long clientId) {
+        return clientMapper.clientWithoutRelationsDTO(this.getClientReferenceById(clientId));
     }
-    @Async
     @Override
-    public CompletableFuture<Void> getClientBalance (long clientId) {
-        this.getAccountBalanceByClientId(clientId);
-        return CompletableFuture.completedFuture(null);
+    public BigDecimal getClientBalance (long clientId) {
+        return this.getAccountBalanceByClientId(clientId);
     }
     @Override
     public BigDecimal getAccountBalanceByClientId (long clientId) {
-         Client client = this.getClientReferenceById(clientId);
+        Client client = this.getClientReferenceById(clientId);
         if(client.getPlanType() == PlanType.PREPAID) {
            return BigDecimal.valueOf(client.getClientPrepaid().getAmountCredit());
         }
