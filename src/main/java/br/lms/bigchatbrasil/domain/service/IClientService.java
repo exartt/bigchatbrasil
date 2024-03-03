@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 
 public interface IClientService {
-    Client getClientById (long clientId);
+    Client getClientReferenceById(long clientId);
     CompletableFuture<ClientDTO> getClientInformation (long clientId);
     CompletableFuture<Void> getClientBalance (long clientId);
     BigDecimal getAccountBalanceByClientId (long clientId);

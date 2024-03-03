@@ -30,14 +30,14 @@ public class ClientService implements IClientService {
 
     @Override
     @Transactional
-    public Client getClientById (long clientId) {
+    public Client getClientReferenceById(long clientId) {
         return clientRepository.getReferenceById(clientId);
     }
 
     @Async
     @Override
     public CompletableFuture<ClientDTO> getClientInformation (long clientId) {
-        ClientDTO clientDTO = clientMapper.clientWithoutRelationsDTO(this.getClientById(clientId));
+        ClientDTO clientDTO = clientMapper.clientWithoutRelationsDTO(this.getClientReferenceById(clientId));
         return CompletableFuture.completedFuture(clientDTO);
     }
     @Async
@@ -48,7 +48,7 @@ public class ClientService implements IClientService {
     }
     @Override
     public BigDecimal getAccountBalanceByClientId (long clientId) {
-         Client client = this.getClientById(clientId);
+         Client client = this.getClientReferenceById(clientId);
         if(client.getPlanType() == PlanType.PREPAID) {
            return BigDecimal.valueOf(client.getClientPrepaid().getAmountCredit());
         }
@@ -59,7 +59,7 @@ public class ClientService implements IClientService {
     @Override
     @Transactional
     public CompletableFuture<Void> updateTypePlan(long clientId, TypePlanDTO typePlanDTO) {
-        Client client = this.getClientById(clientId);
+        Client client = this.getClientReferenceById(clientId);
         client.setPlanType(typePlanDTO.getPlanType());
         return CompletableFuture.completedFuture(null);
     }

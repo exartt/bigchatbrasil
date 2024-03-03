@@ -32,7 +32,7 @@ public class ClientPostpaidService implements IClientPostpaidService {
     @Override
     @Transactional
     public CompletableFuture<Void> updateLimitAmount(long clientId, PostpaidDTO postpaidDTO) {
-        Client client = clientService.getClientById(clientId);
+        Client client = clientService.getClientReferenceById(clientId);
         validateClientForPostpaidUpdate(client, postpaidDTO);
         updateClientPostpaidData(client, postpaidDTO);
         return CompletableFuture.completedFuture(null);

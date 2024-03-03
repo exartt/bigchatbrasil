@@ -7,7 +7,6 @@ import br.lms.bigchatbrasil.domain.model.Client;
 import br.lms.bigchatbrasil.domain.model.ClientPrepaid;
 import br.lms.bigchatbrasil.domain.service.IClientPrepaidService;
 import br.lms.bigchatbrasil.domain.service.IClientService;
-import br.lms.bigchatbrasil.infrastructure.persistence.ClientPrepaidRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -37,7 +36,7 @@ public class ClientPrepaidService implements IClientPrepaidService {
     @Override
     @Transactional
     public CompletableFuture<Void> insertCredit (CreditDTO creditDTO) {
-        Client client = clientService.getClientById(creditDTO.getClientId());
+        Client client = clientService.getClientReferenceById(creditDTO.getClientId());
         if(client.getPlanType() == PlanType.PREPAID) {
             this.insertCreditByClient(client, creditDTO.getAmountCredit());
         } else {

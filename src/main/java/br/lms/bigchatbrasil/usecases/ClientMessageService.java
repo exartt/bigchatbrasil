@@ -54,7 +54,7 @@ public class ClientMessageService implements IClientMessageService {
 
     @Transactional
     private ClientMessage storeMessageAndRetrieveInfo (MessageDTO messageDTO) {
-        Client client = clientService.getClientById(messageDTO.getClientId());
+        Client client = clientService.getClientReferenceById(messageDTO.getClientId());
 
         ClientMessage clientMessage = new ClientMessage();
         clientMessage.setClient(client);

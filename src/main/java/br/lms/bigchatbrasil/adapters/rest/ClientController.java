@@ -23,7 +23,7 @@ public class ClientController {
     private final IClientPrepaidService clientPrepaidService;
     private final SimpMessagingTemplate template;
 
-    public ClientController(ClientMapper clientMapper, IClientService clientService,
+    public ClientController(IClientService clientService,
                             IClientPostpaidService clientPostpaidService,
                             IClientPrepaidService clientPrepaidService,
                             SimpMessagingTemplate template) {
