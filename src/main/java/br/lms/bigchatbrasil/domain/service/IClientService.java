@@ -9,8 +9,8 @@ import java.util.concurrent.CompletableFuture;
 
 public interface IClientService {
     Client getClientReferenceById(long clientId);
-    ClientDTO getClientInformation (long clientId);
-    BigDecimal getClientBalance (long clientId);
+    CompletableFuture<ClientDTO> getClientInformation (long clientId);
+    CompletableFuture<BigDecimal> getClientBalance (long clientId);
     BigDecimal getAccountBalanceByClientId (long clientId);
     CompletableFuture<Void> updateTypePlan (long clientId, TypePlanDTO typePlanDTO);
 }

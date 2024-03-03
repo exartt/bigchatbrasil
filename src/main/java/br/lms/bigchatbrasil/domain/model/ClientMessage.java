@@ -33,4 +33,7 @@ public class ClientMessage extends AbstractEntity implements Serializable {
 
     @Column(name = "text", nullable = false)
     private String message;
+
+    @Column(name = "version", nullable = false)
+    private Integer version;
 }

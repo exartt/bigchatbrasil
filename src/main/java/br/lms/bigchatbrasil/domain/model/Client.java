@@ -42,6 +42,9 @@ public class Client extends AbstractEntity implements Serializable {
     @Column(name = "plan_type", nullable = false)
     private PlanType planType;
 
+    @Column(name = "whatsapp", nullable = false)
+    private boolean whatsapp;
+
     @OneToOne(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     private ClientPrepaid clientPrepaid;
 

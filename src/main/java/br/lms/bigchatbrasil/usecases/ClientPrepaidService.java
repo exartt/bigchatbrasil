@@ -35,18 +35,18 @@ public class ClientPrepaidService implements IClientPrepaidService {
     @Async
     @Override
     @Transactional
-    public CompletableFuture<Void> insertCredit (CreditDTO creditDTO) {
+    public CompletableFuture<Float> insertCredit (CreditDTO creditDTO) {
         Client client = clientService.getClientReferenceById(creditDTO.getClientId());
         if(client.getPlanType() == PlanType.PREPAID) {
             this.insertCreditByClient(client, creditDTO.getAmountCredit());
         } else {
             throw new InvalidPlanTypeException(client.getPlanType().toString());
         }
-        return CompletableFuture.completedFuture(null);
+        return CompletableFuture.completedFuture(client.getClientPrepaid().getAmountCredit());
     }
 
     @Override
-    @Transactional
+    @Transactional(noRollbackFor = com.twilio.exception.ApiException.class)
     public void deduceCredit (Client client) {
         BigDecimal amountCredit = BigDecimal.valueOf(client.getClientPrepaid().getAmountCredit());
         float deducedCredit = amountCredit.subtract(MESSAGE_FEE).setScale(2, RoundingMode.HALF_EVEN).floatValue();

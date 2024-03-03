@@ -15,6 +15,7 @@ public class ClientMapper {
         dto.setCnpj(client.getCnpj());
         dto.setCompanyName(client.getCompanyName());
         dto.setPlanType(client.getPlanType().name());
+        dto.setWhatsapp(client.isWhatsapp());
 
         return dto;
     }

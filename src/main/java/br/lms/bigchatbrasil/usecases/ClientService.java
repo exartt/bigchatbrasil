@@ -33,14 +33,16 @@ public class ClientService implements IClientService {
     public Client getClientReferenceById(long clientId) {
         return clientRepository.getReferenceById(clientId);
     }
-
+    @Async
     @Override
-    public ClientDTO getClientInformation (long clientId) {
-        return clientMapper.clientWithoutRelationsDTO(this.getClientReferenceById(clientId));
+    public CompletableFuture<ClientDTO> getClientInformation (long clientId) {
+        return CompletableFuture.completedFuture(
+                clientMapper.clientWithoutRelationsDTO(
+                        this.getClientReferenceById(clientId)));
     }
     @Override
-    public BigDecimal getClientBalance (long clientId) {
-        return this.getAccountBalanceByClientId(clientId);
+    public CompletableFuture<BigDecimal> getClientBalance (long clientId) {
+        return CompletableFuture.completedFuture(this.getAccountBalanceByClientId(clientId));
     }
     @Override
     public BigDecimal getAccountBalanceByClientId (long clientId) {

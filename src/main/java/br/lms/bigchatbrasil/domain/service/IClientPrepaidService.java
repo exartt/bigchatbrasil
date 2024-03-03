@@ -6,6 +6,6 @@ import br.lms.bigchatbrasil.domain.model.Client;
 import java.util.concurrent.CompletableFuture;
 
 public interface IClientPrepaidService {
-    CompletableFuture<Void> insertCredit (CreditDTO creditDTO);
+    CompletableFuture<Float> insertCredit (CreditDTO creditDTO);
     void deduceCredit (Client client);
 }

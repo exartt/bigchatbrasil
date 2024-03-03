@@ -6,7 +6,10 @@ import br.lms.bigchatbrasil.domain.model.Client;
 import br.lms.bigchatbrasil.domain.model.ClientMessage;
 import br.lms.bigchatbrasil.domain.service.*;
 import br.lms.bigchatbrasil.infrastructure.persistence.ClientMessageRepository;
+import com.twilio.exception.TwilioException;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import java.math.BigDecimal;
 
 @Service
 public class ClientMessageService implements IClientMessageService {
+    private static final Logger logger = LoggerFactory.getLogger(ClientMessageService.class);
     private final IClientService clientService;
     private final BigDecimal MESSAGE_FEE;
     private final ClientMessageRepository clientMessageRepository;
@@ -40,10 +44,18 @@ public class ClientMessageService implements IClientMessageService {
 
         this.billMessage(clientMessage.getClient());
 
-        String sid = twilioMessageSender.sendMessage(messageDTO);
-
-        clientMessage.setSid(sid);
-
+        /*
+        * caso não queira criar credenciais no twilio o envio será ignorado.
+        * Caso queria siga a documentação de criação do twilio:
+        * https://www.twilio.com/docs/messaging/quickstart/java
+        * e adicione no .env as credenciais para uso.
+        * */
+        try {
+            String sid = twilioMessageSender.sendMessage(messageDTO);
+            clientMessage.setSid(sid);
+        } catch (Exception e) {
+            logger.error("Error sending message with Twilio: " + e.getMessage(), e);
+        }
     }
     private void validateSufficientBalanceForMessage (long clientId) {
         BigDecimal balance = clientService.getAccountBalanceByClientId(clientId);
@@ -52,13 +64,17 @@ public class ClientMessageService implements IClientMessageService {
         }
     }
 
-    @Transactional
+    @Transactional(dontRollbackOn = {TwilioException.class})
     private ClientMessage storeMessageAndRetrieveInfo (MessageDTO messageDTO) {
         Client client = clientService.getClientReferenceById(messageDTO.getClientId());
 
         ClientMessage clientMessage = new ClientMessage();
         clientMessage.setClient(client);
-        clientMessage.setTelephone(messageDTO.getTelephone());
+        clientMessage.setTelephone(messageDTO.getRawTelephone());
+        clientMessage.setWhatsapp(client.isWhatsapp());
+        clientMessage.setMessage(messageDTO.getMessage());
+        clientMessage.setSid("0000000000");
+        clientMessage.setVersion(0);
 
         return clientMessageRepository.save(clientMessage);
     }

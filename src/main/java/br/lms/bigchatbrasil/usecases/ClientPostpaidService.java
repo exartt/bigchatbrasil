@@ -48,6 +48,7 @@ public class ClientPostpaidService implements IClientPostpaidService {
         return CompletableFuture.completedFuture(null);
     }
     @Override
+    @Transactional(noRollbackFor = com.twilio.exception.ApiException.class)
     public void increaseSpentValue(Client client) {
         BigDecimal oldBalance = BigDecimal.valueOf(client.getClientPostpaid().getSpentValue());
         BigDecimal newBalance = oldBalance.add(MESSAGE_FEE);

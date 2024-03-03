@@ -36,13 +36,17 @@ public class ClientController {
     }
 
     @GetMapping("/get-information/{clientId}")
-    public ClientDTO getClientById(@PathVariable long clientId) {
-        return clientService.getClientInformation(clientId);
+    public ResponseEntity<HttpStatus> getClientById(@PathVariable long clientId) {
+        clientService.getClientInformation(clientId).thenAccept(clientDTO ->
+                template.convertAndSend("/topic/client-information", clientDTO));
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-balance/{clientId}")
-    public BigDecimal getAccountBalanceByClientId(@PathVariable long clientId) {
-        return clientService.getClientBalance(clientId);
+    public ResponseEntity<HttpStatus> getAccountBalanceByClientId(@PathVariable long clientId) {
+         clientService.getClientBalance(clientId).thenAccept(newBalance ->
+                 template.convertAndSend("/topic/status", "Operação bem sucedida, balanço atual: " + newBalance));
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/insert-credit")

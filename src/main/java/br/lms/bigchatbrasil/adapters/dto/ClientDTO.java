@@ -13,6 +13,7 @@ public class ClientDTO {
     private String cnpj;
     private String companyName;
     private String planType;
+    private boolean whatsapp;
 
     private CreditDTO creditDTO;
 

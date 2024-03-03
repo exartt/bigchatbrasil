@@ -11,4 +11,12 @@ public class MessageDTO {
     private boolean whatsapp;
     private String telephone;
     private String clientTelephone;
+
+    public String getTelephone () {
+        return isWhatsapp() ? "whatsapp:"+telephone : telephone;
+    }
+
+    public String getRawTelephone () {
+        return telephone;
+    }
 }
