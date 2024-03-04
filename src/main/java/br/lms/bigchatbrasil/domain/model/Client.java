@@ -1,6 +1,7 @@
 package br.lms.bigchatbrasil.domain.model;
 
 import br.lms.bigchatbrasil.domain.enums.PlanType;
+import br.lms.bigchatbrasil.domain.enums.PlanTypeConverter;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -38,9 +39,13 @@ public class Client extends AbstractEntity implements Serializable {
     @Column(name = "company_name", nullable = false)
     private String companyName;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "plan_type", nullable = false)
+    @Convert(converter = PlanTypeConverter.class)
     private PlanType planType;
+
+//    @Enumerated(EnumType.STRING)
+//    @Column(columnDefinition = "plan_type")
+//    private PlanType planType;
 
     @Column(name = "whatsapp", nullable = false)
     private boolean whatsapp;

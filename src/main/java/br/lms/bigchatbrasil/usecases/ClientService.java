@@ -59,7 +59,6 @@ public class ClientService implements IClientService {
         }
         return this.getPostpaidBalance(client.getClientPostpaid());
     }
-
     @Async
     @Override
     @Transactional

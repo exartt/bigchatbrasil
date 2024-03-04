@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TypePlanDTO {
-    private String typePlan;
+    private int typePlan;
     public PlanType getPlanType() {
-        return PlanType.fromString(typePlan);
+        return PlanType.fromOrdinal(typePlan);
     }
 }

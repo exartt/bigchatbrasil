@@ -59,7 +59,7 @@ public class ClientPostpaidService implements IClientPostpaidService {
         logger.debug("Validating client for postpaid update: {}", client.getId());
         if (client.getPlanType() != PlanType.POSTPAID) {
             logger.error("Invalid plan type for client ID: {}", client.getId());
-            throw new InvalidPlanTypeException(PlanType.POSTPAID.getPlanName());
+            throw new InvalidPlanTypeException(PlanType.POSTPAID.name());
         }
 
         float newAmountLimit = postpaidDTO.getLimitValue();

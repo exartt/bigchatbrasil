@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS client (
     cpf TEXT NOT NULL,
     cnpj TEXT NOT NULL,
     company_name TEXT NOT NULL,
-    plan_type PlanType NOT NULL,
+    plan_type INT4 NOT NULL DEFAULT 0,
     whatsapp BOOL NOT NULL DEFAULT false,
     entity_uid UUID NOT NULL DEFAULT uuid_generate_v4(),
     version INT NOT NULL DEFAULT 0,

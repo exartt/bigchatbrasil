@@ -63,7 +63,7 @@ public class ClientController {
     @PatchMapping("/change-plan/{clientId}")
     public ResponseEntity<HttpStatus> changeTypePlan (@PathVariable long clientId, @RequestBody TypePlanDTO typePlanDTO) {
         clientService.updateTypePlan(clientId, typePlanDTO).thenAccept(unused ->
-            template.convertAndSend("/topic/status", "Operação bem sucedida, novo plano de selecionado: " + typePlanDTO.getPlanType().getPlanName()));
+            template.convertAndSend("/topic/status", "Operação bem sucedida, novo plano de selecionado: " + typePlanDTO.getPlanType().name()));
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 }
