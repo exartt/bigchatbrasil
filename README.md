@@ -37,6 +37,11 @@ Ainda no diretório raiz do projeto bigchatbrasil, execute o Docker Compose para
 ~~~
 docker-compose up
 ~~~
+ou 
+~~~
+docker compose up
+~~~
+
 Sua aplicação deve iniciar sem problemas.
 
 ### Documentação Adicional
