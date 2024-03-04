@@ -36,6 +36,8 @@ public class ClientMessageService implements IClientMessageService {
     }
     @Override
     public void sendMessage(MessageDTO messageDTO) {
+        logger.info("Starting to send message for client ID: {}", messageDTO.getClientId());
+
         this.validateSufficientBalanceForMessage(messageDTO.getClientId());
 
         ClientMessage clientMessage = storeMessageAndRetrieveInfo(messageDTO);
@@ -58,10 +60,13 @@ public class ClientMessageService implements IClientMessageService {
         }
     }
     private void validateSufficientBalanceForMessage (long clientId) {
+        logger.debug("Validating balance for client ID: {}", clientId);
         BigDecimal balance = clientService.getAccountBalanceByClientId(clientId);
         if(!(balance.compareTo(MESSAGE_FEE) >= 0)) {
+            logger.warn("Insufficient balance for client ID: {}", clientId);
             throw new InsufficientBalanceException();
         }
+        logger.debug("Sufficient balance confirmed for client ID: {}", clientId);
     }
 
     @Transactional(dontRollbackOn = {TwilioException.class})
