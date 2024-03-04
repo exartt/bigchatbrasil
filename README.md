@@ -7,6 +7,16 @@ Bem-vindo ao repositório da aplicação Big Chat Brasil! Esta aplicação é um
 Antes de começar, certifique-se de que você tem o Maven e o Docker instalados em sua máquina. Essas ferramentas são essenciais para a configuração e execução do Big Chat Brasil.
 
 ## Configuração
+
+### Configuração de Ambiente
+Antes de iniciar a construção do pacote, você precisa configurar o ambiente:
+
+#### Arquivo de Variáveis de Ambiente:
+Renomeie o arquivo **dev-env.env** para **.env**. Este arquivo contém as variáveis de ambiente necessárias para a execução da aplicação.
+
+#### Configuração do Twilio (Opcional):
+Caso deseje utilizar a API do Twilio para funcionalidades de mensagens, insira suas credenciais do Twilio no arquivo **.env**. Certifique-se de adicionar as chaves para o SID, Token.
+
 ### Construindo o Pacote
 Para começar a usar o Big Chat Brasil, siga os seguintes passos para construir o pacote da aplicação:
 
