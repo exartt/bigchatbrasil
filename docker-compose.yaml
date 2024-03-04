@@ -3,7 +3,7 @@ services:
     container_name: postgresql_container
     image: postgres:latest
     ports:
-      - "5432:5432"
+      - 5432:5432
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -13,21 +13,13 @@ services:
       - ./datadb:/var/lib/postgresql/data
     restart:
       always
-    networks:
-      - postgres-network
-networks:
-  postgres-network:
-    driver: bridge
-#  backend:
-#    build: .
-#    container_name: app_con
-#    ports:
-#      - "8090:8090"
-#    environment:
-#      - POSTGRES_URL=${POSTGRES_URL}
-#      - POSTGRES_USER=${POSTGRES_USER}
-#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-#    depends_on:
-#      - db
-#    restart: always
+  backend:
+    build: .
+    container_name: app_con
+    ports:
+      - 8090:8090
+    depends_on:
+      - db
+    restart: always
+
 

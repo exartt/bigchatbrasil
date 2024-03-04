@@ -1,6 +1,5 @@
 package br.lms.bigchatbrasil.adapters.rest;
 
-import br.lms.bigchatbrasil.adapters.dto.ClientDTO;
 import br.lms.bigchatbrasil.adapters.dto.CreditDTO;
 import br.lms.bigchatbrasil.adapters.dto.PostpaidDTO;
 import br.lms.bigchatbrasil.adapters.dto.TypePlanDTO;
@@ -12,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
 
 @RestController
 @Transactional
@@ -38,35 +35,35 @@ public class ClientController {
     @GetMapping("/get-information/{clientId}")
     public ResponseEntity<HttpStatus> getClientById(@PathVariable long clientId) {
         clientService.getClientInformation(clientId).thenAccept(clientDTO ->
-                template.convertAndSend("/topic/client-information", clientDTO));
+            template.convertAndSend("/topic/client-information", clientDTO));
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-balance/{clientId}")
     public ResponseEntity<HttpStatus> getAccountBalanceByClientId(@PathVariable long clientId) {
          clientService.getClientBalance(clientId).thenAccept(newBalance ->
-                 template.convertAndSend("/topic/status", "Operação bem sucedida, balanço atual: " + newBalance));
+             template.convertAndSend("/topic/status", "Operação bem sucedida, balanço atual: " + newBalance));
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/insert-credit")
     public ResponseEntity<HttpStatus> insertCredit (@RequestBody CreditDTO creditDTO) {
         clientPrepaidService.insertCredit(creditDTO).thenAccept(unused ->
-                template.convertAndSend("/topic/status", "Operação bem sucedida"));
+            template.convertAndSend("/topic/status", "Operação bem sucedida"));
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @PatchMapping("/change-limit/{clientId}")
     public ResponseEntity<HttpStatus> setNewLimitAmount (@PathVariable long clientId, @RequestBody PostpaidDTO postpaidDTO) {
         clientPostpaidService.updateLimitAmount(clientId, postpaidDTO).thenAccept(unused ->
-                template.convertAndSend("/topic/status", "Operação bem sucedida, novo saldo limite definido."));
+            template.convertAndSend("/topic/status", "Operação bem sucedida, novo saldo limite definido."));
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @PatchMapping("/change-plan/{clientId}")
     public ResponseEntity<HttpStatus> changeTypePlan (@PathVariable long clientId, @RequestBody TypePlanDTO typePlanDTO) {
         clientService.updateTypePlan(clientId, typePlanDTO).thenAccept(unused ->
-                template.convertAndSend("/topic/status", "Operação bem sucedida, novo plano de selecionado: " + typePlanDTO.getPlanType().getPlanName()));
+            template.convertAndSend("/topic/status", "Operação bem sucedida, novo plano de selecionado: " + typePlanDTO.getPlanType().getPlanName()));
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 }
